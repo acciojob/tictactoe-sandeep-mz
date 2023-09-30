@@ -33,31 +33,36 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function handleCellClick(cell) {
-        if (!cell.textContent && !gameOver) {
-            cell.textContent = currentPlayer;
-            checkWin();
+   function handleCellClick(cell) {
+    if (!cell.textContent && !gameOver) {
+        cell.textContent = currentPlayer;
+        if (checkWin()) {
+            // Display the winning message and end the game
+            message.textContent = `${currentPlayer === "X" ? player1Name : player2Name}, congratulations you won!`;
+            gameOver = true;
+        } else {
             currentPlayer = currentPlayer === "X" ? "O" : "X";
             message.textContent = currentPlayer === "X" ? `${player1Name}, you're up!` : `${player2Name}, you're up!`;
         }
     }
+}
 
-    function checkWin() {
-        const cells = document.querySelectorAll(".cell");
-        const winPatterns = [
-            [1, 2, 3], [4, 5, 6], [7, 8, 9], // Rows
-            [1, 4, 7], [2, 5, 8], [3, 6, 9], // Columns
-            [1, 5, 9], [3, 5, 7] // Diagonals
-        ];
+function checkWin() {
+    const cells = document.querySelectorAll(".cell");
+    const winPatterns = [
+        [1, 2, 3], [4, 5, 6], [7, 8, 9], // Rows
+        [1, 4, 7], [2, 5, 8], [3, 6, 9], // Columns
+        [1, 5, 9], [3, 5, 7] // Diagonals
+    ];
 
-        for (const pattern of winPatterns) {
-            const [a, b, c] = pattern;
-            if (cells[a - 1].textContent && cells[a - 1].textContent === cells[b - 1].textContent && cells[a - 1].textContent === cells[c - 1].textContent) {
-                message.textContent = `${currentPlayer === "X" ? player1Name : player2Name}, congratulations you won!`;
-                gameOver = true;
-                return;
-            }
+    for (const pattern of winPatterns) {
+        const [a, b, c] = pattern;
+        if (cells[a - 1].textContent && cells[a - 1].textContent === cells[b - 1].textContent && cells[a - 1].textContent === cells[c - 1].textContent) {
+            return true; // Return true if there's a winner
         }
+    }
+
+    return false; // Return false if there's no winner yet
     }
 
     submitButton.addEventListener("click", initializeGame);
